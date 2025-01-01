@@ -1,4 +1,4 @@
-all: breadcodes.z64
+all: grumbus_quest.z64
 .PHONY: all
 
 BUILD_DIR = build
@@ -14,11 +14,11 @@ SPRITE_MANIFEST_TXT := $(PNG_DIR)/manifest.txt
 MKSPRITE := mksprite
 REDIRECT_STDOUT := >/dev/null
 
-breadcodes.z64: N64_ROM_TITLE = "breadcodes"
-breadcodes.z64: $(BUILD_DIR)/breadcodes.dfs
+grumbus_quest.z64: N64_ROM_TITLE = "grumbus_quest"
+grumbus_quest.z64: $(BUILD_DIR)/grumbus_quest.dfs
 
-$(BUILD_DIR)/breadcodes.dfs: $(wildcard filesystem/*)
-$(BUILD_DIR)/breadcodes.elf: $(OBJS)
+$(BUILD_DIR)/grumbus_quest.dfs: $(wildcard filesystem/*)
+$(BUILD_DIR)/grumbus_quest.elf: $(OBJS)
 
 clean:
 	rm -rf $(BUILD_DIR) *.z64
@@ -27,6 +27,7 @@ clean:
 assets:
 	mksprite 16 2 2 assets/venusaur.png filesystem/venusaur.sprite
 	mksprite 16 9 2 assets/aang.png filesystem/aang.sprite
+	mksprite 16 3 4 assets/grumbus.png filesystem/grumbus.sprite
 	mksprite 16 3 4 assets/player.png filesystem/player.sprite
 	mksprite 16 3 4 assets/npc_ghost.png filesystem/npc_ghost.sprite
 	mksprite 16 9 2 assets/peach.png filesystem/peach.sprite
