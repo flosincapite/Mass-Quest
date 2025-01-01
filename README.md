@@ -29,10 +29,21 @@ You will need to install the following (if you are using WSL, you will need to i
 - NodeJS >v18
 - NPM
 
+### Original Libdragon Instructions
+
 To get libdragon setup, you will need to run the following:
 
 - Make sure the Docker daemon is running
 - `npm i libdragon -g`
+
+### New Libdragon Instructions
+
+I have had better luck with these tutorials:
+[Getting Started with Libdragon](https://n64squid.com/homebrew/libdragon/setup/)
+[Installing Libdragon](https://github.com/DragonMinded/libdragon/wiki/Installing-libdragon)
+
+### Build
+
 - `cd /path/to/this/project`
 - `libdragon init`
 
@@ -41,7 +52,7 @@ To build the project:
 - `libdragon make assets`
 - `libdragon make`
 
-This will produce an N64 ROM  called `breacodes.z64`
+This will produce an N64 ROM  called `breadcodes.z64`
 
 ![Screenshot](screenshot.png)
 
