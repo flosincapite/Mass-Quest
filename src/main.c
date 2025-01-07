@@ -12,6 +12,11 @@
 #include "Actor/player.h"
 #include "Actor/npc.h"
 
+#define	CONSOLE_WIDTH 64
+#define	CONSOLE_HEIGHT 28
+#define HORIZONTAL_PADDING 64
+#define VERTICAL_PADDING 8
+
 static uint32_t animcounter = 0;
 const bool DEBUG = false;
 
@@ -65,12 +70,14 @@ void controller_handle(void) {
 
 void load_textures(void) {
     /* Read in single sprite */
-    int fp = dfs_open("/player.sprite");
+    // int fp = dfs_open("/player.sprite");
+    int fp = dfs_open("/grumbus.sprite");
     player_sprite = malloc( dfs_size( fp ) );
     dfs_read( player_sprite, 1, dfs_size( fp ), fp );
     dfs_close( fp );
 
-    fp = dfs_open("/npc_ghost.sprite");
+    // fp = dfs_open("/npc_ghost.sprite");
+    fp = dfs_open("/player.sprite");
     npc_ghost = malloc( dfs_size( fp ) );
     dfs_read( npc_ghost, 1, dfs_size( fp ), fp );
     dfs_close( fp );
@@ -147,15 +154,70 @@ void load_textures(void) {
 
 int main( void )
 {
+    /* Intro screen */
+    console_init();
+    console_set_render_mode(RENDER_AUTOMATIC);
+    controller_init();
+    uint32_t last_time = get_ticks();
+    uint32_t new_time = last_time - 1;
+    bool do_update = false;
+    int left_pad = 0;
+    /*
+    int pad_delta = 1;
+    int pad_max = 40;
+    */
+    const char marquee[] = "GRUMBUS QUEST";
+    while ( 1 ) {
+        /* Update marquee if needed. */
+        if ( new_time < last_time ) {
+            do_update = true;
+        }
+        new_time = get_ticks();
+        if (new_time - last_time >= TIMER_TICKS(1000000 / 20)) {
+            do_update = true;
+        }
+        last_time = new_time;
+        if ( do_update ) {
+            for ( int i = 0; i < left_pad; ++i ) {
+                putchar( 32 );
+            }
+            for ( int i = 0; i < strlen( marquee ); ++i ) {
+                if ( i + left_pad >= ( CONSOLE_WIDTH - 1 ) ) {
+                    break;
+                }
+                int puttable = marquee[ i ];
+                putchar( puttable );
+            }
+            puts( "" );
+            /*
+            left_pad += pad_delta;
+            if ( left_pad >= pad_max || left_pad <= 0 ) {
+                pad_delta *= -1;
+            }
+            */
+            left_pad += 1;
+            left_pad %= ( CONSOLE_WIDTH - 1 );
+        }
+
+        /* Exit title screen if start is pressed. */
+        controller_scan();
+        struct controller_data keys = get_keys_pressed();
+        bool should_exit = keys.c[0].start || keys.c[0].A;
+        if ( should_exit ) {
+            console_clear();
+            console_close();
+            break;
+        }
+    }
+
     /* Initialize peripherals */
     display_init( RESOLUTION_320x240, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_RESAMPLE );
     dfs_init( DFS_DEFAULT_LOCATION );
     rdp_init();
-    controller_init();
     timer_init();
     load_textures();
 
-    uint32_t last_time = get_ticks();
+    last_time = get_ticks();
 
     map = &overworld_map;
 
